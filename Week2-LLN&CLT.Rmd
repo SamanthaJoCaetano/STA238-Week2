@@ -1,0 +1,108 @@
+---
+title: "Week 2 - STA238 - Synchronous Lecture"
+author: "Samantha-Jo Caetano"
+date: "January 20, 2021"
+output: pdf_document
+---
+
+## Law of Large Numbers (Chapter 13)
+
+The Law of Large Numbers (LLN) states that if you take independent samples from
+a well-behaved probability distribution, their sample mean converges in probability to
+the true mean. Let's investigate the LLN computationally through simulations!
+
+Load the packages we need:
+```{r load-packages,warning=FALSE,message=FALSE}
+library(tidyverse)
+library(patchwork) # For arranging plots
+options(digits = 2) # Print numbers with only 2 digits
+```
+
+Consider $X_{1},\ldots,X_{n}\overset{iid}{\sim}\text{Exponential}(\beta)$. Their
+mean is $EX_{1} = 1/\beta$. If we take a sample from this distribution and 
+calculate $\bar{X}_{n}$, we should get something close to $1/\beta$. If
+we make $n$ larger, we should get something closer. The LLN tells us that we can
+always make $n$ large enough such that we get as close as we want with as high 
+a probability as we want.
+
+To simulate from a $\text{Exponential}(\beta)$ distribution in \texttt{R}, use the
+`rexp` function:
+
+```{r sim-exp-1}
+# Simulate from a exponential
+
+
+```
+
+We can plot the density of the exponential sample mean for various $n$. These densities should have mean $1/\beta = 1/0.5 = 2$. 
+
+What is the distribution of $\bar{X}$ if $X_1,..., X_n \sim Exponential(\beta)$?
+
+Answer: $\bar{X} \sim Gamma(n, n\beta)$
+
+
+
+```{r dens-gamma-1}
+# Define a function to compute the density
+
+#### UNCOMMENT BELOW
+# exp_samplemean_density <- function(x ,n, rate = 0.5) {
+# }
+
+
+
+# Let's plot this:
+
+# plot(xbar, fxbar)
+
+
+```
+
+We can get a better look at "where the sample mean is going" by doing the following:
+
+1. Simulate a $\text{Exponential}(0.5)$ sample of size $n$ for some really big $n$,
+
+1. Calculate the the running average of this: for each $m = 1,\ldots,n$, compute $\bar{X}_{m} = (1/m)\sum_{i=1}^{m}X_{i}$,
+
+1. Plot $\bar{X}_{m}$ against $m$. $\bar{X}_{m}$ should get closer and closer to $2$ as $m\to n$ (...probably).
+
+We do this as follows:
+
+```{r sim-exp-2}
+set.seed(20210119) 
+
+n <- 100
+beta <- 0.5
+exponential_experiment <- rexp(n = n,rate = beta)
+
+# Compute the running average- a vector where the nth component is the average
+# of the first n terms in exponential_experiment
+runningaverage <- cumsum(exponential_experiment) / 1:length(exponential_experiment)
+
+# Plot, remembering that the true mean is 2
+tibble(x = 1:length(runningaverage),
+       y = runningaverage) %>%
+  ggplot(aes(x = x,y = y)) +
+  theme_classic() +
+  geom_point(pch = ".") +
+  geom_hline(yintercept = 1/beta,colour = "red",size = .5,linetype = "dotted")
+
+```
+
+## Central Limit Theorem (Chapter 14) - Some Exercises
+
+
+Assume that the time until a start-up company yields profits is Exponentially distributed with a mean of 2 months (i.e., rate=$\beta=0.5$). Moreover, assume (I know this is a stretch...) that start-ups (and their profits) are independent. Pretend you are a statistical consultant to some one interested in investing in some start-ups. Answer the following questions using the Central Limit Theorem and ` R` code:
+
+1. If they invest in 30 start-ups what is the probability that the mean time until realizing profits exceeds 2.033 months (~2 months and 1 day)?
+2. If they invest in 50 start-ups, what is a good range of time in which you are 95\% certain that the mean time until achieving profits will have been achieved?
+
+```{r CLT-exp-start-ups}
+
+## 1 P(Xbar > 2.5)
+
+
+## 2 P(a < Xbar < b) = 0.95
+
+```
+
