@@ -1,0 +1,32 @@
+---
+title: "MyFirstSimIn238"
+author: "Samantha-Jo Caetano"
+date: "1/21/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We want to simulate some data to help us investigate if hairloss is related to eating broccoli.
+
+```{r}
+
+library(tidyverse)
+
+set.seed(20210121)
+
+eat_broccoli <- sample( x=c("Never", "Always", "Sometimes"), 
+                        size=10,
+                        replace=TRUE,
+                        prob = c(0.8, 0.15, 0.05) )
+hairloss <- runif(n=10, min=0, max=1)
+age <- rpois(n=10, lambda=35)
+
+my_hairloss_data <- tibble(age, eat_broccoli, hairloss)
+
+```
+
+
+
